@@ -1,0 +1,4 @@
+import type { NextFunction, Request, Response } from 'express'; import jwt from 'jsonwebtoken'; import { env } from '../config/env.js'; import { AppError } from '../utils/http.js'; import type { Role } from '../models/index.js';
+export interface AuthRequest extends Request { auth?:{id:string;role:Role} }
+export function authenticate(req:AuthRequest,_res:Response,next:NextFunction){try { const token=req.headers.authorization?.replace(/^Bearer\s+/,''); if(!token) throw new Error(); const p=jwt.verify(token,env.JWT_ACCESS_SECRET) as {sub:string;role:Role}; req.auth={id:p.sub,role:p.role}; next(); } catch { next(new AppError(401,'Authentication required')); }}
+export const authorize=(...roles:Role[])=>(req:AuthRequest,_res:Response,next:NextFunction)=>!req.auth||!roles.includes(req.auth.role)?next(new AppError(403,'Insufficient permissions')):next();
