@@ -1,0 +1,1 @@
+import { create } from 'zustand'; type User={id:string;name:string;email:string;role:'RIDER'|'DRIVER'|'ADMIN'}; export const useAuth=create<{user:User|null;set:(u:User|null)=>void}>((set)=>({user:null,set:(user)=>set({user})}));

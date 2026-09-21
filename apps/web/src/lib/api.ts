@@ -1,0 +1,1 @@
+import axios from 'axios'; export const api=axios.create({baseURL:'/api',withCredentials:true}); api.interceptors.request.use(c=>{const t=localStorage.getItem('accessToken');if(t)c.headers.Authorization=`Bearer ${t}`;return c;});
